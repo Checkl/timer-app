@@ -50,7 +50,7 @@
         });
 
         let timerInterval;
-        let timer = initialMinutes * 60; // 12 minutes in seconds
+        let timer = initialMinutes * 60;
         let isPaused = false;
 
         function keepActive() {
@@ -64,12 +64,12 @@
         }
 
         function startTimer() {
-            clearInterval(timerInterval); // Clear any existing intervals
+            clearInterval(timerInterval);
             isPaused = false;
-            playSound('audio0'); // Play sound at the beginning
-            setTimeout(() => { // Delay to allow sound to play before starting timer
+            playSound('audio0');
+            setTimeout(() => {
                 timerInterval = setInterval(updateTimer, 1000);
-            }, 2000); // 2-second delay to ensure sound plays completely
+            }, 2000);
             if (document.getElementById('playJingle').checked) {
                 setTimeout(() => {
                     playSound('jingle');
@@ -87,7 +87,7 @@
             timer = initialMinutes * 60 + 1;
             isPaused = false;
             stopSounds();
-            updateTimer(); // Update the timer display
+            updateTimer();
         }
 
         function updateTimer() {
@@ -101,11 +101,10 @@
                 let elapsedMinutes = Math.floor(elapsedTime / 60);
                 let elapsedSeconds = elapsedTime % 60;
 
-                // Display timer
                 document.getElementById('remainingTime').innerText = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
                 document.getElementById('elapsedTime').innerText = `${elapsedMinutes}:${elapsedSeconds < 10 ? '0' : ''}${elapsedSeconds}`;
 
-                if (timer === (initialMinutes / 2) * 60) { // 6 minutes
+                if (timer === (initialMinutes / 2) * 60) {
                     playSound('audio1');
                 }
 
