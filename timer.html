@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>12 Minute Timer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <h1 class="title">Timer</h1>
+    <div class="col">
+        <div class="row">
+            <button onclick="startTimer()">Start</button>
+            <button onclick="pauseTimer()">Pause</button>
+            <button class="reset" onclick="resetTimer()">Reset</button>
+        </div>
+        <div class="row">
+            <input id="playJingle" type="checkbox" />
+            <label for="playJingle">Jingle abspielen?</label>
+        </div>
+    </div>
+
+    <p>Zeit vergangen: <span id="elapsedTime">0:00</span></p>
+    <p>Zeit übrig: <span id="remainingTime">12:00</span></p>
+
+    <audio id="audio0">
+        <source src="bell.mp3" type="audio/mpeg">
+    </audio>
+
+    <audio id="audio1">
+        <source src="horn.mp3" type="audio/mpeg">
+    </audio>
+
+    <audio id="audio2">
+        <source src="horn.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="jingle">
+        <source src="jingle.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        const initialMinutes = 14;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            keepActive();
+            setVariableText();
+        });
+
+        let timerInterval;
+        let timer = initialMinutes * 60; // 12 minutes in seconds
+        let isPaused = false;
+
+        function keepActive() {
+            requestAnimationFrame(keepActive);
+        }
+
+        function setVariableText() {
+            document.querySelector('.title').innerText = initialMinutes + " Minute Timer";
+            document.querySelector('#remainingTime').innerText = initialMinutes + ":00";
+            document.title = initialMinutes + " Minute Timer";
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval); // Clear any existing intervals
+            isPaused = false;
+            playSound('audio0'); // Play sound at the beginning
+            setTimeout(() => { // Delay to allow sound to play before starting timer
+                timerInterval = setInterval(updateTimer, 1000);
+            }, 2000); // 2-second delay to ensure sound plays completely
+            if (document.getElementById('playJingle').checked) {
+                setTimeout(() => {
+                    playSound('jingle');
+                }, 2000);
+            }
+        }
+
+        function pauseTimer() {
+            clearInterval(timerInterval);
+            isPaused = true;
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            timer = initialMinutes * 60 + 1;
+            isPaused = false;
+            stopSounds();
+            updateTimer(); // Update the timer display
+        }
+
+        function updateTimer() {
+            if (!isPaused) {
+                timer--;
+
+                let minutes = Math.floor(timer / 60);
+                let seconds = timer % 60;
+
+                let elapsedTime = initialMinutes * 60 - timer;
+                let elapsedMinutes = Math.floor(elapsedTime / 60);
+                let elapsedSeconds = elapsedTime % 60;
+
+                // Display timer
+                document.getElementById('remainingTime').innerText = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                document.getElementById('elapsedTime').innerText = `${elapsedMinutes}:${elapsedSeconds < 10 ? '0' : ''}${elapsedSeconds}`;
+
+                if (timer === (initialMinutes / 2) * 60) { // 6 minutes
+                    playSound('audio1');
+                }
+
+                if (timer === 0) {
+                    clearInterval(timerInterval);
+                    playSound('audio2');
+                }
+            }
+        }
+
+        function playSound(audioId) {
+            let audio = document.getElementById(audioId);
+            audio.play();
+        }
+
+        function stopSounds() {
+            let audioElements = document.querySelectorAll('audio');
+            audioElements.forEach(audio => {
+                audio.pause();
+                audio.currentTime = 0;
+            });
+        }
+    </script>
+
+</body>
+
+</html>
