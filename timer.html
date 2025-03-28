@@ -117,13 +117,11 @@
         }
 
         function playSound(audioId) {
-            let audio = document.getElementById(audioId);
-            audio.play();
+            document.getElementById(audioId).play();
         }
 
         function stopSounds() {
-            let audioElements = document.querySelectorAll('audio');
-            audioElements.forEach(audio => {
+            document.querySelectorAll('audio').forEach(audio => {
                 audio.pause();
                 audio.currentTime = 0;
             });
