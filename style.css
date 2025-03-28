@@ -10,8 +10,10 @@ body {
 }
 
 h1 {
-    color: #333;
-    font-size: 40px;
+    background-image: linear-gradient(90deg, #55ded1, #2cae1e);
+    color: transparent;
+    background-clip: text;
+    font-size: 60px;
 }
 
 button {
@@ -71,7 +73,7 @@ span {
 }
 
 .time {
-    margin: 80px;
+    margin: 60px;
 }
 
 .time-display {
