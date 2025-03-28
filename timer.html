@@ -10,21 +10,25 @@
 
 <body>
 
-    <h1 class="title">Timer</h1>
-    <div class="col">
-        <div class="row">
-            <button onclick="startTimer()">Start</button>
-            <button onclick="pauseTimer()">Pause</button>
-            <button class="reset" onclick="resetTimer()">Reset</button>
+    <div class="col container">
+        <h1 class="title">Timer</h1>
+        <div class="time">
+            <p class="time-display">Zeit vergangen: <span id="elapsedTime">0:00</span></p>
+            <p class="time-display">Zeit übrig: <span id="remainingTime">12:00</span></p>
         </div>
-        <div class="row">
-            <input id="playJingle" type="checkbox" />
-            <label for="playJingle">Jingle abspielen?</label>
+        <div class="col">
+            <div class="row">
+                <button onclick="startTimer()">Start</button>
+                <button onclick="pauseTimer()">Pause</button>
+                <button class="reset" onclick="resetTimer()">Reset</button>
+            </div>
+            <div class="row">
+                <input id="playJingle" type="checkbox" />
+                <label for="playJingle">Jingle abspielen?</label>
+            </div>
         </div>
     </div>
 
-    <p>Zeit vergangen: <span id="elapsedTime">0:00</span></p>
-    <p>Zeit übrig: <span id="remainingTime">12:00</span></p>
 
     <audio id="audio0">
         <source src="bell.mp3" type="audio/mpeg">
