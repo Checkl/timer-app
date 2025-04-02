@@ -14,7 +14,7 @@
         <h1 class="title">Timer</h1>
         <div class="time">
             <p class="time-display">Time passed: <span id="elapsedTime">0:00</span></p>
-            <p class="time-display">Time left: <span id="remainingTime">12:00</span></p>
+            <p class="time-display">Time left: <span id="remainingTime">X:XX</span></p>
         </div>
         <div class="col">
             <div class="row">
@@ -22,9 +22,18 @@
                 <button onclick="pauseTimer()">Pause</button>
                 <button class="reset" onclick="resetTimer()">Reset</button>
             </div>
+            <div class="col controls">
+                <div class="row">
+                    <input id="playJingle" type="checkbox" />
+                    <label for="playJingle">Play Jingle?</label>
+                </div>
+                <div class="row">
+                    <input id="controlSpotify" type="checkbox" />
+                    <label for="controlSpotify">Control Spotify?</label>
+                </div>
+            </div>
             <div class="row">
-                <input id="playJingle" type="checkbox" />
-                <label for="playJingle">Play Jingle?</label>
+                <button class="edit" onclick="openEditTime()">Edit Time</button>
             </div>
         </div>
     </div>
@@ -45,26 +54,58 @@
         <source src="jingle.mp3" type="audio/mpeg">
     </audio>
 
-    <script>
-        const initialMinutes = 12;
+    <div class="lightbox" id="lightbox">
+        <div class="lightbox-content">
+            <h2>Enter new time in minutes</h2>
+            <input id="newTime" type="number" value="12" />
+            <button onclick="setNewTime()">Set</button>
+            <button class="reset" onclick="closeEditTime()">Cancel</button>
+        </div>
+    </div>
 
+    <script>
         document.addEventListener("DOMContentLoaded", () => {
             keepActive();
             setVariableText();
+            if (localStorage.getItem('timeMinutes') !== null) {
+                timeMinutes = localStorage.getItem('timeMinutes');
+                setVariableText();
+            } else {
+                timeMinutes = 12;
+                setVariableText();
+            }
+            timer = timeMinutes * 60;
         });
 
+        let timeMinutes;
         let timerInterval;
-        let timer = initialMinutes * 60;
+        let timer;
         let isPaused = false;
 
         function keepActive() {
             requestAnimationFrame(keepActive);
         }
 
+        function openEditTime() {
+            document.getElementById('lightbox').style.display = 'block';
+        }
+
+        function closeEditTime() {
+            document.getElementById('lightbox').style.display = 'none';
+        }
+
+        function setNewTime() {
+            newTime = document.getElementById('newTime').value;
+            localStorage.setItem('timeMinutes', newTime);
+            closeEditTime();
+            resetTimer();
+            location.reload();
+        }
+
         function setVariableText() {
-            document.querySelector('.title').innerText = initialMinutes + " Minute Timer";
-            document.querySelector('#remainingTime').innerText = initialMinutes + ":00";
-            document.title = initialMinutes + " Minute Timer";
+            document.querySelector('.title').innerText = timeMinutes + " Minute Timer";
+            document.querySelector('#remainingTime').innerText = timeMinutes + ":00";
+            document.title = timeMinutes + " Minute Timer";
         }
 
         function startTimer() {
@@ -92,7 +133,7 @@
 
         function resetTimer() {
             clearInterval(timerInterval);
-            timer = initialMinutes * 60 + 1;
+            timer = timeMinutes * 60 + 1;
             isPaused = false;
             stopSounds();
             updateTimer();
@@ -106,20 +147,23 @@
                 let minutes = Math.floor(timer / 60);
                 let seconds = timer % 60;
 
-                let elapsedTime = initialMinutes * 60 - timer;
+                let elapsedTime = timeMinutes * 60 - timer;
                 let elapsedMinutes = Math.floor(elapsedTime / 60);
                 let elapsedSeconds = elapsedTime % 60;
 
                 document.getElementById('remainingTime').innerText = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
                 document.getElementById('elapsedTime').innerText = `${elapsedMinutes}:${elapsedSeconds < 10 ? '0' : ''}${elapsedSeconds}`;
 
-                if (timer === (initialMinutes / 2) * 60) {
+                if (timer === (timeMinutes / 2) * 60) {
                     playSound('audio1');
                 }
 
                 if (timer === 0) {
                     clearInterval(timerInterval);
                     playSound('audio2');
+                    setTimeout(() => {
+                        resetTimer();
+                    }, 2000);
                 }
             }
         }
@@ -177,13 +221,14 @@
 
         async function controlSpotify(action) {
             const token = await getAccessToken();
+            let controlSpotify = document.getElementById('controlSpotify').checked;
 
             if (!token) {
                 console.error("Kein gültiges Access Token!");
                 return;
             }
 
-            if (action == 'pause') {
+            if (action == 'pause' && controlSpotify) {
                 await fetch("https://api.spotify.com/v1/me/player/pause", {
                     method: "PUT",
                     headers: {
@@ -191,7 +236,7 @@
                     }
                 });
             }
-            if (action == 'play') {
+            if (action == 'play' && controlSpotify) {
                 await fetch("https://api.spotify.com/v1/me/player/play", {
                     method: "PUT",
                     headers: {
@@ -199,7 +244,6 @@
                     }
                 });
             } else {
-                console.error("Ungültige Aktion:", action);
                 return;
             }
         }
