@@ -55,18 +55,18 @@ function setTitle(time) {
 function startTimer() {
     clearInterval(timerInterval);
     isPaused = false;
-    playSound('audio0');
+    playSound('sound_start');
     setTimeout(() => {
         timerInterval = setInterval(updateTimer, 1000);
-    }, soundDuration('audio0'));
+    }, soundDuration('sound_start'));
     if (document.getElementById('playJingle').checked) {
         controlSpotify('pause');
         setTimeout(() => {
-            playSound('jingle');
-        }, soundDuration('audio0'));
+            playSound('sound_jingle');
+        }, soundDuration('sound_start'));
         setTimeout(() => {
             controlSpotify('play');
-        }, soundDuration('jingle') + soundDuration('audio0'));
+        }, soundDuration('sound_jingle') + soundDuration('sound_start'));
     }
 }
 
@@ -98,14 +98,14 @@ function updateTimer() {
         document.getElementById('elapsedTime').innerText = `${elapsedMinutes}:${elapsedSeconds < 10 ? '0' : ''}${elapsedSeconds}`;
         setTitle(`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
         if (timer === (timeMinutes / 2) * 60) {
-            playSound('audio1');
+            playSound('sound_halftime');
         }
         if (timer === 0) {
             clearInterval(timerInterval);
-            playSound('audio2');
+            playSound('sound_finish');
             setTimeout(() => {
                 resetTimer();
-            }, soundDuration('audio2'));
+            }, soundDuration('sound_finish'));
         }
     }
 }
