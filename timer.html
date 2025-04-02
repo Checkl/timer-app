@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Timer</title>
+    <title>Timer App</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -105,7 +105,18 @@
         function setVariableText() {
             document.querySelector('.title').innerText = timeMinutes + " Minute Timer";
             document.querySelector('#remainingTime').innerText = timeMinutes + ":00";
-            document.title = timeMinutes + " Minute Timer";
+        }
+
+        function setTitle(time) {
+            if (time == 'stop') {
+                document.title = "Timer stopped";
+                return;
+            } else if (time == 'pause') {
+                document.title = "Timer paused";
+                return;
+            } else {
+                document.title = time + " Timer running";
+            }
         }
 
         function startTimer() {
@@ -128,6 +139,7 @@
 
         function pauseTimer() {
             clearInterval(timerInterval);
+            setTitle('pause');
             isPaused = true;
         }
 
@@ -138,6 +150,7 @@
             stopSounds();
             updateTimer();
             controlSpotify('play');
+            setTitle('stop');
         }
 
         function updateTimer() {
@@ -153,6 +166,8 @@
 
                 document.getElementById('remainingTime').innerText = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
                 document.getElementById('elapsedTime').innerText = `${elapsedMinutes}:${elapsedSeconds < 10 ? '0' : ''}${elapsedSeconds}`;
+
+                setTitle(`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
 
                 if (timer === (timeMinutes / 2) * 60) {
                     playSound('audio1');
