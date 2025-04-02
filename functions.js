@@ -58,15 +58,15 @@ function startTimer() {
     playSound('audio0');
     setTimeout(() => {
         timerInterval = setInterval(updateTimer, 1000);
-    }, 2000);
+    }, soundDuration('audio0'));
     if (document.getElementById('playJingle').checked) {
         controlSpotify('pause');
         setTimeout(() => {
             playSound('jingle');
-        }, 2000);
+        }, soundDuration('audio0'));
         setTimeout(() => {
             controlSpotify('play');
-        }, soundDuration('jingle') + 2000);
+        }, soundDuration('jingle') + soundDuration('audio0'));
     }
 }
 
@@ -105,7 +105,7 @@ function updateTimer() {
             playSound('audio2');
             setTimeout(() => {
                 resetTimer();
-            }, 2000);
+            }, soundDuration('audio2'));
         }
     }
 }
