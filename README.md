@@ -26,4 +26,8 @@ To start the local server simply use:
 bash start_server.sh
 ```
 
+After starting the server you can reach the app here:
+
+> <http://localhost:8000/timer.html>
+
 To edit the timer runtime, you can use the Form Field within the app.
