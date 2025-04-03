@@ -10,7 +10,7 @@ You need Python to run the local server to prevent CORS Errors.
 ## Usage
 
 To use the Spotify pause and play feature you need to create a Spotify App and get your Client ID, Client Secret and Refresh Token.
-You need to add these details to the credentials.json
+You need to add these details to the **credentials.json** (you can use the example file but need to rename it to credentials.json)
 
 ```json
 {
